@@ -10,7 +10,7 @@ Ebanc Ruby bindings are available as a gem, to install it just install the gem:
 
 If you're using Bundler, add the gem to Gemfile.
 
-    gem 'grape'
+    gem 'ebanc'
 Run    bundle install.
 
 Requirements
