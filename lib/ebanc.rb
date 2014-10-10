@@ -47,7 +47,7 @@ module Ebanc
 		
 		def create_customer(customer)
 			if customer[:first_name] && customer[:last_name] && customer[:routing_number] && customer[:account_number]
-				params = 'first_name=' + customer[:first_name] + '&last_name=' + customer[:last_name] + '&routing_number=' + customer[:routing_number] + '&account_number=' + customer[:account_number]
+				params = URI.encode_www_form([["first_name", customer[:first_name]], ["last_name", customer[:last_name]], ["routing_number", customer[:routing_number]], ["account_number", customer[:account_number]]])
 				
 				uri = URI.parse(@ebanc_url + '/customers')
 				https = Net::HTTP.new(uri.host,uri.port)
@@ -67,7 +67,7 @@ module Ebanc
 		
 		def update_customer(customer)
 			if customer[:uuid] && customer[:first_name] && customer[:last_name] && customer[:routing_number] && customer[:account_number]
-				params = 'first_name=' + customer[:first_name] + '&last_name=' + customer[:last_name] + '&routing_number=' + customer[:routing_number] + '&account_number=' + customer[:account_number]
+				params = URI.encode_www_form([["first_name", customer[:first_name]], ["last_name", customer[:last_name]], ["routing_number", customer[:routing_number]], ["account_number", customer[:account_number]]])
 				
 				uri = URI.parse(@ebanc_url + '/customers/' + uuid)
 				https = Net::HTTP.new(uri.host,uri.port)
@@ -94,8 +94,47 @@ module Ebanc
 		end
 		
 		def create_transaction(customer)
-			if customer[:first_name] && customer[:last_name] && customer[:routing_number] && customer[:account_number]
-				params = 'first_name=' + customer[:first_name] + '&last_name=' + customer[:last_name] + '&routing_number=' + customer[:routing_number] + '&account_number=' + customer[:account_number]
+			#if we are creating this transaction by passing in the information
+			if customer[:first_name] && customer[:last_name] && customer[:routing_number] && customer[:account_number] && customer[:amount]
+				params = URI.encode_www_form([["first_name", customer[:first_name]], ["last_name", customer[:last_name]], ["routing_number", customer[:routing_number]], ["account_number", customer[:account_number]], ["amount", customer[:amount]]])
+				
+				if customer[:category]
+					params = params + '&' + URI.encode_www_form([["category", customer[:category]]])
+				end
+				
+				if customer[:memo]
+					params = params + '&' + URI.encode_www_form([["memo", customer[:memo]]])
+				end
+				
+				uri = URI.parse(@ebanc_url + '/customers')
+				https = Net::HTTP.new(uri.host,uri.port)
+				https.use_ssl = @use_ssl
+				req = Net::HTTP::Post.new(uri.path, initheader = {'Authorization' => "Token token=\"" + @api_key + "\""})
+				req.body = params
+				res = https.request(req)
+				if res.code == 201
+					return res.body
+				else
+					return false
+				end
+			else
+				return false
+			end
+		end
+		
+		def create_transaction_from_customer(customer)
+			#if we are creating this transaction by passing in the information
+			if customer[:customer_uuid] && customer[:amount]
+				params = URI.encode_www_form([["customer_uuid", customer[:customer_uuid]], ["amount", customer[:amount]]])
+				params = 'customer_uuid=' + customer[:customer_uuid] + '&amount=' + customer[:amount]
+				
+				if customer[:category]
+					params = params + '&' + URI.encode_www_form([["category", customer[:category]]])
+				end
+				
+				if customer[:memo]
+					params = params + '&' + URI.encode_www_form([["memo", customer[:memo]]])
+				end
 				
 				uri = URI.parse(@ebanc_url + '/customers')
 				https = Net::HTTP.new(uri.host,uri.port)
