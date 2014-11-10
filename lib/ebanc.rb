@@ -139,6 +139,12 @@ class Ebanc
 				params = params + '&' + URI.encode_www_form([["memo", transaction[:memo]]])
 			end
 			
+			if transaction[:type] && transaction[:type] == 'credit'
+				params = params + '&' + URI.encode_www_form([["type", 'credit']])
+			else
+				params = params + '&' + URI.encode_www_form([["type", 'debit']])
+			end
+			
 			m_transation = query_api(@ebanc_url + '/transactions', 'post', params)
 			
 			if m_transation['base']
@@ -165,6 +171,12 @@ class Ebanc
 			
 			if transaction[:memo]
 				params = params + '&' + URI.encode_www_form([["memo", transaction[:memo]]])
+			end
+			
+			if transaction[:type] && transaction[:type] == 'credit'
+				params = params + '&' + URI.encode_www_form([["type", 'credit']])
+			else
+				params = params + '&' + URI.encode_www_form([["type", 'debit']])
 			end
 			
 			m_transation = query_api(@ebanc_url + '/transactions', 'post', params)
