@@ -22,7 +22,7 @@ Requirements
 Usage
 -----
 
-####Initalize####
+#### Initalize
 
 You initalize the API client in the following way:
 
@@ -34,7 +34,7 @@ You initalize the API client in the following way:
     ebanc = Ebanc.new(api_key, gateway_id)
 
 
-####Customers####
+#### Customers
 
 Get a list of all this account's customers
 
@@ -69,7 +69,7 @@ Update a customer:
     end
 
 
-####Transactions####
+#### Transactions
 
 Get a list of all this account's last 50 transactions
 
@@ -81,7 +81,7 @@ Get a the latest information about a specific transaction
     ebanc = Ebanc.new(api_key, gateway_id)
     transaction = ebanc.transaction('73607e90-2bdb-0132-80aa-1040f38cff7c')
 
-#####Creating Transactions#####
+##### Creating Transactions
 
 When creating a transaction you can either pass in all customer details or simply pass in the uuid for an already created customer. Sometimes it makes sense to just pass in all of the details. This is usually in the case of a single transaction. Other times it makes more sense to store the customer details and just store that uuid on your server to pass in at payment time. This is a good approch when you will have returning customers or need to setup some kind of a schedule, but don't want to store that sensitive information on your server.
 
@@ -95,7 +95,7 @@ Create Transaction by passing in all details.
         puts ebanc.error
     end
 
-######Types, Categories and, Memos######
+###### Types, Categories and, Memos
 
 Transaction type can be a debit or credit. If you do not pass in a transaction type, debit is defaulted.
 
@@ -120,7 +120,7 @@ Create Transaction by passing in all details and optional category and/or memo:
       puts ebanc.error
     end
 
-######Customer UUID######
+###### Customer UUID
 
 Create Transaction by passing in customer UUID:
 
